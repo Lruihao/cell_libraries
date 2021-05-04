@@ -1,0 +1,8 @@
+body{
+  font-size: 14px;
+}
+
+/*bootstraps*/
+.modal-dialog{
+  max-width: 100% !important;
+}

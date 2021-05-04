@@ -1,0 +1,6 @@
+.cell-grid-header{
+  display: none;
+}
+.cell-grid-row{
+  flex-wrap: wrap;
+}
