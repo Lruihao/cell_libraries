@@ -227,7 +227,10 @@ Cell.Grid = function Grid() {
           _isPanelBottom(self);
         }
         $(self._domNode).find('.cell-grid-select-all').removeClass('selected')
-                .prop('checked', false);
+                .prop({
+                  'checked': false,
+                  'disabled': self.getItems(true).length === 0
+                });
         (self.options.onload && self.options.onload.call(self));
       }, 'error': function (error) {
         self.options.onerror && self.options.onerror.call(self, error);
@@ -381,15 +384,24 @@ Cell.Grid = function Grid() {
   };
 
   /**
-   * 判斷是否已全選Grid<br/>
+   * 判斷是否已全選 Grid<br/>
    * 若沒有全選就將header中的全選按鈕取消
    * @param {Cell.Grid} self grid
-   * @returns {Boolean}
+   * @returns {Boolean} 是否全選 Grid
    */
   var _isSelectAll = (self) => {
-    let selectAll = self.getSelection().length === self.getItems(true).length;
-    $(self._domNode).find('.cell-grid-select-all')
-            .prop('checked', selectAll);
+    let itemsCount = self.getItems(true).length;
+    let $selectAll = $(self._domNode).find('.tiger-grid-select-all');
+    //可選中資料為 0 筆時，禁用全選
+    if (itemsCount === 0) {
+      $selectAll.prop({
+        'checked': false,
+        'disabled': true
+      });
+      return false;
+    }
+    let selectAll = self.getSelection().length === itemsCount;
+    $selectAll.prop('checked', selectAll);
     return selectAll;
   };
 
@@ -486,7 +498,7 @@ Cell.Grid = function Grid() {
     this._domNode = null;
     this._sort = {};
     this._auto_increment = 0;
-    this.options.pageDataCount = (this.options.pageDataCount === false) ? this.options.pageDataCount : 15;
+    this.options.pageDataCount = (this.options.pageDataCount === false) ? false : (Number.parseInt(this.options.pageDataCount) || 15);
     this.options.selector = Boolean(this.options.selector) || false;
     this._noMore = false;
     _createElement(this);
@@ -786,7 +798,10 @@ Cell.Grid = function Grid() {
         _createItemCol(grid, data, $cr, col);
       });
       $(this._domNode).find('.cell-grid-select-all').removeClass('selected')
-              .prop('checked', false);
+              .prop({
+                'checked': false,
+                'disabled': false
+              });
       _setupItem(this, $cr);
       _checkDataCount(grid);
       return dataId;
@@ -839,6 +854,26 @@ Cell.Grid = function Grid() {
         $(item).data(field, value);
         _setItemColVal(grid, item, col, field, value);
       });
+      return this;
+    };
+
+    /**
+     * 禁用資料列，禁用後不可選中
+     * @param {Array<Element>} items 要禁用的資料列
+     * @returns {Cell.Grid}
+     * @name Tiger.Grid#setItemsDisabled
+     * @function
+     */
+    _proto.setItemsDisabled = function (items) {
+      $(items).addClass('disabled')
+              .removeClass('selected')
+              .find('.tiger-grid-row-selector').off('click')
+              .find('.tiger-grid-row-checkbox')
+              .prop({
+                'checked': false,
+                'disabled': true
+              });
+      _isSelectAll(this);
       return this;
     };
 

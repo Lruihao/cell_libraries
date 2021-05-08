@@ -227,7 +227,7 @@ Cell.Dialog = function Dialog() {
    * @param {String} [option.content] dialog 的內容
    * @param {Array<Cell.Dialog.button>} [option.buttons] 按鈕
    * @param {Array<Cell.Dialog.event>} [option.events] 事件
-   * @param {String|Boolean} [option.backdrop='static'] Bootstrap's Modal.backdrop
+   * @param {String|Boolean} [option.backdrop=true] Bootstrap's Modal.backdrop
    * @param {Function} [option.onshowbefore] 當 Dialog 顯示前的handler
    * @param {Function} [option.onshow] 當 Dialog 顯示後的handler
    * @param {Function} [option.onclose] 當 Dialog 關閉後的handler
@@ -354,7 +354,7 @@ Cell.Dialog = function Dialog() {
      * @param {String} [option.content] 內容
      * @param {String} [option.contentClass] 內容的 className in HTML
      * @param {Array<Cell.Dialog.event>} [option.events] 事件設定
-     * @param {String|Boolean} [option.backdrop='static'] Bootstrap's Modal.backdrop
+     * @param {String|Boolean} [option.backdrop=true] Bootstrap's Modal.backdrop
      * @returns {Cell.Dialog}
      * @name Cell.Dialog#show
      * @function

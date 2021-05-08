@@ -1,4 +1,4 @@
-/* global $c */
+/* global Vue,$c */
 
 /**
  * Date format
@@ -91,7 +91,7 @@ function Cell() {
         $c.pushHistory(href, (option.initData || null));
       } else {
         $c.ajax.html(href, {
-          'replaceTo': (option.target || $(this).attr('target')),
+          'appendTo': (option.target || $(this).attr('target')),
           'success': option.initPage
         });
       }
@@ -650,8 +650,13 @@ function Cell() {
             toggleClass('square-brackets', !!user.name || !!user.account)
             .html(user.ip);
     date && $(document.createElement('span')).appendTo($divDate)
-            .attr('title', date)
-            .html($c.timeSince(date));
+            .attr({
+              'data-toggle': 'tooltip',
+              'data-placement': 'bottom',
+              'title': date
+            })
+            .html($c.timeSince(date))
+            .tooltip();
     return $(document.createElement('div')).append($divUser, $divDate).children();
   };
 
@@ -794,5 +799,20 @@ function Cell() {
     document.title = (title && `${title} - `) + document.title.split(' - ').pop();
     return this;
   };
+}
+if (typeof Vue === 'function') {
+  /**
+   * Vue 擴充构造器
+   */
+  Cell.Vue = Vue.extend({
+    'mounted': function () {
+      this.$nextTick(function () {
+        $c.setupFlink($('.cell-main-container').find('.f'));
+        $('[data-toggle="tooltip"]').tooltip();
+        $c.setTitle(true);
+        $c.stackSticky();
+      });
+    }
+  });
 }
 var $c = new Cell();
