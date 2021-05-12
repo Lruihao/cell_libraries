@@ -179,7 +179,7 @@ if (!$c.ajax) {
         'Accept': 'text/html',
         'dataType': 'html',
         'success': function (response) {
-          $('.xdsoft_datetimepicker, .tooltip.bs-tooltip-top').remove();
+          $('.xdsoft_datetimepicker, .tooltip.show[role="tooltip"]').remove();
           $c.p && (typeof $c.p.onunload === 'function') && $c.p.onunload.call();
           if (options.replaceHistory === true) {
             $c.replaceHistory(url);
