@@ -802,16 +802,28 @@ function Cell() {
 }
 if (typeof Vue === 'function') {
   /**
-   * Vue 擴充构造器
+   * Vue 擴充構造器
+   * @since 1.0.1
+   * @author Lruihao
    */
   Cell.Vue = Vue.extend({
     'mounted': function () {
       this.$nextTick(function () {
-        $c.setupFlink($('.cell-main-container').find('.f'));
-        $('[data-toggle="tooltip"]').tooltip();
-        $c.setTitle(true);
-        $c.stackSticky();
+        this.initPage();
       });
+    }, 'updated': function () {
+      this.initPage(this.$el);
+    }, 'methods': {
+      /**
+       * Vue Dom 掛載後執行的初始化操作
+       * @param {Element|String} [parent='.cell-main-container'] CSS Selector or DOM
+       */
+      'initPage': function (parent = '.cell-main-container') {
+        $c.setTitle(true);
+        $c.setupFlink($(parent).find('.fast-link'));
+        $(parent).find('[data-toggle="tooltip"]').tooltip();
+        $c.stackSticky();
+      }
     }
   });
 }
