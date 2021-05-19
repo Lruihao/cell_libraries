@@ -724,14 +724,15 @@ Cell.Grid = function Grid() {
     /**
      * 增加多筆item
      * @param {Array} dataset 資料集
+     * @param {Boolean} [top=false] 新增在前面
      * @returns {Cell.Grid}
      * @name Cell.Grid#addItems
      * @function
      */
-    _proto.addItems = function (dataset) {
+    _proto.addItems = function (dataset, top = false) {
       let grid = this;
       $(dataset).each(function (index, data) {
-        grid.addItem(data);
+        grid.addItem(data, top);
       });
       _checkDataCount(grid);
       return this;
@@ -762,7 +763,7 @@ Cell.Grid = function Grid() {
     /**
      * 增加單筆Item
      * @param {Object} data 資料
-     * @param {bool} top 新增在前面
+     * @param {Boolean} [top=false] 新增在前面
      * @returns {Cell.Grid}
      * @name Cell.Grid#addItem
      * @function
