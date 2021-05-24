@@ -2053,7 +2053,7 @@ Cell.Uploader = function Uploader() {
       'query': uploader.options.query,
       'headerSticky': false,
       'identify': 'displayId',
-      'selector': true,
+      'selector': !uploader.options.disableRemove,
       'fields': [{
           'name': 'displayId',
           'hidden': true
