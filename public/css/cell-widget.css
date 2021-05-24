@@ -166,7 +166,7 @@
   line-height: 1.5;
   flex: 1 1 auto;
   font-size: 1rem;
-  padding: 0 .35rem;
+  padding: 0 .35rem !important;
   display: inline-flex;
   width: auto !important;
   min-width: 0;
