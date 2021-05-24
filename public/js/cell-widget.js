@@ -2261,14 +2261,16 @@ Cell.Uploader = function Uploader() {
       'url': uploader.options.removeUrl,
       'data': {
         'ids': ids
-      }, 'success': function () {
+      }, 'success': function (response) {
         uploader.list.removeItems(displayIds);
+        uploader.options.onremoved && uploader.options.onremoved.call(uploader, response);
       }
     });
     return this;
   };
   /**
    * @callback Cell.Uploader.onuploaded
+   * @callback Cell.Uploader.onremoved
    * @param {Object} response 後臺回傳的訊息
    */
 
@@ -2294,6 +2296,7 @@ Cell.Uploader = function Uploader() {
    * @param {String} [options.fileTypeUrl] 取得允許上傳的副檔名URL
    * @param {Bool} [options.displaySize=false] 是否顯示檔案大小
    * @param {Cell.Uploader.onuploaded} [options.onuploaded] 檔案上傳完成時
+   * @param {Cell.Uploader.onremoved} [options.onremoved] 刪除檔案時
    * @memberOf Cell
    * @namespace Uploader
    * @class Cell.Uploader
