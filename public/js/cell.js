@@ -799,6 +799,31 @@ function Cell() {
     document.title = (title && `${title} - `) + document.title.split(' - ').pop();
     return this;
   };
+
+  /**
+   * Get Cookie
+   * @param {String} key
+   * @returns {Object|String} cookieJar|cookieValue
+   * @name Cell#getCookie
+   * @function
+   * @since 1.0.6
+   */
+  _proto.getCookie = (key) => {
+    if (arguments.length && !key) {
+      return;
+    }
+    let cookies = document.cookie ? document.cookie.split('; ') : [];
+    let cookieJar = {};
+    for (let cookie of cookies) {
+      let parts = cookie.split('=');
+      let value = parts.slice(1).join('=');
+      if (value[0] === '"') {
+        value = value.slice(1, -1);
+      }
+      cookieJar[decodeURIComponent(parts[0])] = decodeURIComponent(value);
+    }
+    return key ? cookieJar[key] : cookieJar;
+  };
 }
 if (typeof Vue === 'function') {
   /**
