@@ -638,7 +638,7 @@ function Cell() {
    * @name Cell#createFieldUser
    * @function
    */
-  _proto.createFieldUser = function (user, date) {
+  _proto.createFieldUser = (user, date) => {
     let $divUser = $(document.createElement('div')).addClass('align-self-start');
     let $divDate = $(document.createElement('div')).addClass('align-self-end');
     user.name && $(document.createElement('span')).appendTo($divUser)
@@ -667,7 +667,7 @@ function Cell() {
    * @name Cell#copy2cb
    * @function
    */
-  _proto.copy2cb = function (input) {
+  _proto.copy2cb = (input) => {
     input.select();
     return document.execCommand('Copy');
   };
