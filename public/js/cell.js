@@ -253,6 +253,9 @@ function Cell() {
       return;
     }
     let dateTS = new Date(date.replace(/-/g, '/'));
+    if ($c.getCookie('cell_timesince_enabled') === 'false') {
+      return dateTS.format('yyyy-MM-dd hh:mm');
+    }
     let seconds = Math.floor((new Date() - dateTS) / 1000);
     let interval = Math.floor(seconds / (30 * 24 * 3600));
     if (interval >= 4) {
