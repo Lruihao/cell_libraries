@@ -859,23 +859,48 @@ Cell.Grid = function Grid() {
     };
 
     /**
-     * 禁用資料列，禁用後不可選中
-     * @param {Array<Element>} items 要禁用的資料列
+     * 啟用/禁用資料列，禁用後不可選中
+     * @param {Array<Element>} items 要啟用/禁用的資料列
+     * @param {Boolean} [selectable=true] 是否啟用
      * @returns {Cell.Grid}
-     * @name Tiger.Grid#setItemsDisabled
+     * @name Cell.Grid#setItemsSelectable
      * @function
      */
-    _proto.setItemsDisabled = function (items) {
-      $(items).addClass('disabled')
-              .removeClass('selected')
+    _proto.setItemsSelectable = function (items, selectable = true) {
+      let self = this;
+      $(items).toggleClass('disabled', !selectable)
               .find('.tiger-grid-row-selector').off('click')
               .find('.tiger-grid-row-checkbox')
               .prop({
-                'checked': false,
-                'disabled': true
+                'disabled': !selectable
               });
-      _isSelectAll(this);
+      if (selectable) {
+        $(items).find('.tiger-grid-row-selector')
+                .on('click', function (event) {
+                  self.selectItem($(this).parent('.tiger-grid-row'));
+                  event.stopPropagation();
+                });
+      } else {
+        $(items).removeClass('selected')
+                .find('.tiger-grid-row-checkbox')
+                .prop({
+                  'checked': false
+                });
+      }
+      _isSelectAll(self);
       return this;
+    };
+
+    /**
+     * 禁用資料列，禁用後不可選中
+     * @deprecated 1.0.8 即將棄用
+     * @param {Array<Element>} items 要禁用的資料列
+     * @returns {Cell.Grid#setItemsSelectable}
+     * @name Cell.Grid#setItemsDisabled
+     * @function
+     */
+    _proto.setItemsDisabled = function (items) {
+      return this.setItemsSelectable(items, false);
     };
 
     /**
