@@ -1,6 +1,6 @@
 /* 
     Created on : 2021/6/3 11:02
-    Updated on : 2021/6/10 11:31
+    Updated on : 2021/6/16 17:43
     Author     : Lruihao
 */
 #cell-toc,
@@ -10,6 +10,7 @@
 }
 /*cell-toc*/
 #cell-toc{
+  font-size: .9rem;
   flex-wrap: nowrap;
 }
 #cell-toc .nav{
@@ -38,27 +39,28 @@
   border-top: 1px solid white;
 }
 #cell-toc>nav>nav .nav-link{
-  text-indent: 1rem;
+  text-indent: 1em;
 }
 #cell-toc>nav>nav>nav .nav-link{
-  text-indent: 2rem;
+  text-indent: 2em;
 }
 #cell-toc>nav>nav>nav>nav .nav-link{
-  text-indent: 3rem;
+  text-indent: 3em;
 }
 #cell-toc>nav>nav>nav>nav>nav .nav-link{
-  text-indent: 4rem;
+  text-indent: 4em;
 }
 #cell-toc>nav>nav>nav>nav>nav>nav .nav-link{
-  text-indent: 5rem;
+  text-indent: 5em;
 }
 /*cell-docuemnt*/
 .cell-document{
   padding: 0 .25rem;
 }
 .cell-document p{
+  font-size: 1rem;
   line-height: 2;
-  margin: 0 0 18px;
+  margin: 0 0 1rem;
 }
 .cell-document h1,
 .cell-document h2,
@@ -72,22 +74,22 @@
   line-height: 1.4;
 }
 .cell-document h1{
-  font-size: 22px;
+  font-size: 1.5rem;
 }
 .cell-document h2{
-  font-size: 20px;
+  font-size: 1.4rem;
 }
 .cell-document h3{
-  font-size: 18px;
+  font-size: 1.3rem;
 }
 .cell-document h4{
-  font-size: 16px;
+  font-size: 1.2rem;
 }
 .cell-document h5{
-  font-size: 14px;
+  font-size: 1.1rem;
 }
 .cell-document h6{
-  font-size: 12px;
+  font-size: 1rem;
 }
 .cell-document blockquote{
   border-left: 4px solid #ddd;
