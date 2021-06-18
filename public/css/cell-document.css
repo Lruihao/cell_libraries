@@ -1,6 +1,6 @@
 /* 
     Created on : 2021/6/3 11:02
-    Updated on : 2021/6/16 17:43
+    Updated on : 2021/6/18 17:43
     Author     : Lruihao
 */
 #cell-toc,
@@ -33,10 +33,7 @@
   color: #007bff!important;
   background: #ffffff!important;
   font-weight: bold;
-  box-shadow: 5px 3px 8px #cacbcb;
-}
-#cell-toc>nav nav .nav-link{
-  border-top: 1px solid white;
+  position: sticky;
 }
 #cell-toc>nav>nav .nav-link{
   text-indent: 1em;
@@ -56,6 +53,10 @@
 /*cell-docuemnt*/
 .cell-document{
   padding: 0 .25rem;
+  display: none;
+}
+.cell-document[data-spy='scroll']{
+  display: inherit;
 }
 .cell-document p{
   font-size: 1rem;
@@ -160,4 +161,10 @@
 }
 .cell-document tr:nth-of-type(even){
   background-color: #f8f8f8;
+}
+
+/*Module Style*/
+.cell-toolbar{
+  background: #ffffff;
+  z-index: 500;
 }

@@ -33,7 +33,9 @@ $c.document = new function () {
      */
     _proto.traverseDF = function (callback) {
       (function recurse(currentNode) {
-        callback(currentNode);
+        if (callback(currentNode) === false) {
+          return;
+        }
         for (let childNode of currentNode.children) {
           recurse(childNode);
         }
@@ -91,7 +93,11 @@ $c.document = new function () {
    * 創建整體文檔結構
    */
   let _createContainer = () => {
-    let $row = $(document.createElement('div')).appendTo(document.querySelector('.cell-main-container') || 'body')
+    let parent = document.querySelector('.cell-main-container') || 'body';
+    document.querySelector('.cell-mod-title') || $(document.createElement('h1')).appendTo(parent)
+            .addClass('cell-mod-title')
+            .html('幫助');
+    let $row = $(document.createElement('div')).appendTo(parent)
             .addClass('row flex-row-reverse');
     _document.$colToc = $(document.createElement('div')).appendTo($row)
             .addClass('col-12 col-lg-4 col-xl-3 px-lg-0');
@@ -123,6 +129,11 @@ $c.document = new function () {
       'tag': 0,
       'content': '目錄'
     });
+    /**
+     * 從文檔中獲取的標題層級，默認 6 層<br/>
+     * 超過 n 層的不顯示在目錄，需在 DFS 做剪枝處理 e.g. h1 和 h5 同層級
+     * @type {jQuery Object}
+     */
     let headings = $content.find('h1,h2,h3,h4,h5,h6');
     let last = {
       'node': tocTree
@@ -150,8 +161,9 @@ $c.document = new function () {
    * 創建目錄 DOM
    * @param {$c.document.Tree} tocTree 目錄樹
    * @param {jQuery Object} $coc 目錄 DOM
+   * @param {Number} [tocLevel=3] 目錄顯示層級
    */
-  let _createElementToc = (tocTree, $coc) => {
+  let _createElementToc = (tocTree, $coc, tocLevel = 3) => {
     let $baseNav = $(document.createElement('nav')).addClass('nav nav-pills flex-column');
     //標題序號棧 (LIFO), 有幾個元素代表几層
     let stackTitleNo = [0];
@@ -162,14 +174,16 @@ $c.document = new function () {
         return $baseNav.clone().appendTo($coc)
                 .addClass(`nav-${node.data.id}`);
       }
-      if (tocTree.getNodeLevel(node) < lastLevel) {
+      //當前節點所在目錄樹層級
+      let currentLevel = tocTree.getNodeLevel(node);
+      if (currentLevel < lastLevel) {
         //出棧次數
-        let popTimes = lastLevel - tocTree.getNodeLevel(node);
+        let popTimes = lastLevel - currentLevel;
         while (popTimes--) {
           stackTitleNo.pop();
         }
       }
-      lastLevel = tocTree.getNodeLevel(node);
+      lastLevel = currentLevel;
       stackTitleNo[stackTitleNo.length - 1]++;
       //註: BS 的 scrollspy 錨點不能以數字開頭且不能包含小數點
       let anchor = `toc${stackTitleNo.join('-')}`;
@@ -181,12 +195,17 @@ $c.document = new function () {
                 'href': `#${anchor}`,
                 'title': node.data.content
               })
+              .css('z-index', 500 - node.data.id)
               .html(`${stackTitleNo.join('.')}&nbsp;${node.data.content}`);
-      if (node.children.length > 0) {
-        //有子節點時，入棧
+      //當前節點層級 < 目錄顯示層級 且 有子節點時，入棧
+      if (currentLevel < tocLevel && node.children.length > 0) {
         stackTitleNo.push(0);
         $baseNav.clone().appendTo(`.nav-${node.parent.data.id}`)
                 .addClass(`nav-${node.data.id}`);
+      }
+      //剪枝操作，不訪問超過 tocLevel 層的節點
+      if (currentLevel === tocLevel) {
+        return false;
       }
     });
   };
@@ -204,28 +223,30 @@ $c.document = new function () {
               'data-offset': '0'
             })
             .on('activate.bs.scrollspy', function () {
+              $('[scroll-last-sticky="true"]').removeAttr('scroll-last-sticky');
+              $coc.find('.nav-link').css('top', '');
+              let activeItemLength = $coc.find('.nav-link.active').length;
               let $lastActiveTocItem = $coc.find('.nav-link.active').last();
-              let tocHeight = $coc.outerHeight();
-              let gap = $lastActiveTocItem.offset().top - $coc.offset().top;
-              if (gap >= tocHeight) {
-                //滾出下方可視區
-                return $coc.scrollTop($coc.scrollTop() + tocHeight);
+              let gap = $lastActiveTocItem.offset().top - $coc.offset().top + $lastActiveTocItem.outerHeight();
+              //滾出可視區 上方 || 下方
+              if (gap <= activeItemLength * $lastActiveTocItem.outerHeight() || gap >= $coc.outerHeight()) {
+                $coc.scrollTop($coc.scrollTop() + gap - activeItemLength * $lastActiveTocItem.outerHeight());
               }
-              if (gap < 0) {
-                //滾出上方可視區
-                return $coc.scrollTop($coc.scrollTop() + gap);
-              }
+              $c.stackSticky('top', $coc, '.nav-link.active');
             });
     _addResizeListener($content, $coc);
-    _createElementToc(_generTocTree($content), $coc);
+    _document.tocTree = _generTocTree($content);
+    _createElementToc(_document.tocTree, $coc);
   };
 
   this.init = () => {
     _createContainer();
     _renderDocumnet();
     //異步獲取頁面，需手動執行
-    $('.cell-document').scrollspy({
-      'target': '#cell-toc'
-    });
+    $('.cell-document').scrollspy({'target': '#cell-toc'});
+    //首次進入頁面定位錨點位置
+    location.hash && $('.cell-document').scrollTop($(location.hash).position().top);
+    $('.cell-toolbar').addClass('position-sticky');
+    $c.stackSticky();
   };
 };
