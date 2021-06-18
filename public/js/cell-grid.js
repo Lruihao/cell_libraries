@@ -892,18 +892,6 @@ Cell.Grid = function Grid() {
     };
 
     /**
-     * 禁用資料列，禁用後不可選中
-     * @deprecated 1.0.8 即將棄用
-     * @param {Array<Element>} items 要禁用的資料列
-     * @returns {Cell.Grid#setItemsSelectable}
-     * @name Cell.Grid#setItemsDisabled
-     * @function
-     */
-    _proto.setItemsDisabled = function (items) {
-      return this.setItemsSelectable(items, false);
-    };
-
-    /**
      * 重新格式化欄位
      * @param {Array|String} dataIds 資料 ID
      * @param {Array|String} [fields=null] 欄位名稱，為空時格式化整個 item 
